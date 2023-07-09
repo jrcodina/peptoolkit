@@ -1,6 +1,6 @@
 # PepToolkit
 
-The `peptoolkit` R package provides a function to generate properties for peptide sequences for Principal Component Analysis (PCA).
+The `peptoolkit` R package is designed for the manipulation and analysis of peptides. The package provides a range of functionalities aimed at assisting researchers in peptide engineering and proteomics. The package allows users to manipulate peptides by adding amino acids at every position, count the occurrences of each amino acid at each position, and transform amino acid counts based on probabilities. Additionally, the package offers functionalities to select the best versus the worst peptides and further analyze these peptides. This includes counting specific residues, reducing peptide sequences, extracting features through One Hot Encoding (OHE), and utilizing Quantitative Structure-Activity Relationship (QSAR) properties. This package is intended for both researchers and bioinformatics enthusiasts who are working on peptide-based projects, specially for their use with machine learning.
 
 ## Installation
 
