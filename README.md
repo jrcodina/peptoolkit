@@ -34,6 +34,18 @@ Please refer to function documentation for more details on parameters and their 
 
 If you use `peptoolkit` in your research, please cite:
 
-```r
-citation("peptoolkit")
-```
+To cite package ‘peptoolkit’ in publications use:
+
+  Codina J (2023). _peptoolkit: A Toolkit for Using Peptide
+  Sequences in Machine Learning and Accelerate Virtual
+  Screening_. R package version 0.0.1.
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {peptoolkit: A Toolkit for Using Peptide Sequences in Machine Learning and
+Accelerate Virtual Screening},
+    author = {Josep-Ramon Codina},
+    year = {2023},
+    note = {R package version 0.0.1},
+  }
