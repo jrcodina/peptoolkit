@@ -34,8 +34,6 @@ Please refer to function documentation for more details on parameters and their 
 
 If you use `peptoolkit` in your research, please cite:
 
-To cite package ‘peptoolkit’ in publications use:
-
   Codina J (2023). _peptoolkit: A Toolkit for Using Peptide
   Sequences in Machine Learning and Accelerate Virtual
   Screening_. R package version 0.0.1.
