@@ -4,7 +4,7 @@ Title: A Toolkit for Using Peptide Sequences in Machine Learning and Accelerate 
 Version: 0.0.1
 Authors@R: person("Josep-Ramon", "Codina", , "jrc356@miami.edu", role = c("aut", "cre"),
                comment = c(ORCID = "0000-0003-4391-450X"))
-Description: PepToolKit is an R package designed for the manipulation and 
+Description: A toolkit designed for the manipulation and 
     analysis of peptides. The package provides a range of functionalities aimed 
     at assisting researchers in peptide engineering and proteomics. The package 
     allows users to manipulate peptides by adding amino acids at every position, 
@@ -17,7 +17,7 @@ Description: PepToolKit is an R package designed for the manipulation and
     This package is intended for both researchers and bioinformatics enthusiasts 
     who are working on peptide-based projects, specially for their use with 
     machine learning.
-Depends: R (>= 4.3.1)
+Depends: R (>= 4.3.0)
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

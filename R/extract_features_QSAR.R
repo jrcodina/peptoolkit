@@ -17,7 +17,6 @@
 #' @export
 #'
 #' @examples
-#' extract_features_QSAR(n = 3)
 #' extract_features_QSAR(n = 3, custom.list = TRUE, PeList = c('ACA', 'ADE'))
 extract_features_QSAR <- function(n, pH = 7.4, custom.list = FALSE, PeList = NULL, rem.cys = FALSE, rem.met = FALSE, rem.sali = FALSE, norm = FALSE){
 

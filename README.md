@@ -40,6 +40,7 @@ If you use `peptoolkit` in your research, please cite:
 
 A BibTeX entry for LaTeX users is
 
+```
   @Manual{,
     title = {peptoolkit: A Toolkit for Using Peptide Sequences in Machine Learning and
 Accelerate Virtual Screening},
@@ -47,3 +48,4 @@ Accelerate Virtual Screening},
     year = {2023},
     note = {R package version 0.0.1},
   }
+```

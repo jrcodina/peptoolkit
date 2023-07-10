@@ -41,6 +41,5 @@ from peptide sequences. The extraction is based on a variety of amino acid prope
 and functions from the "Peptides" package (https://github.com/dosorio/Peptides/).
 }
 \examples{
-extract_features_QSAR(n = 3)
 extract_features_QSAR(n = 3, custom.list = TRUE, PeList = c('ACA', 'ADE'))
 }
