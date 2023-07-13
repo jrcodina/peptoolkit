@@ -1,31 +1,18 @@
 Package: peptoolkit
 Type: Package
-Title: A Toolkit for Using Peptide Sequences in Machine Learning and Accelerate Virtual Screening
+Title: "A Toolkit for Using Peptide Sequences in Machine Learning"
 Version: 0.0.1
-Authors@R: person("Josep-Ramon", "Codina", , "jrc356@miami.edu", role = c("aut", "cre"),
-               comment = c(ORCID = "0000-0003-4391-450X"))
-Description: A toolkit designed for the manipulation and 
-    analysis of peptides. The package provides a range of functionalities aimed 
-    at assisting researchers in peptide engineering and proteomics. The package 
-    allows users to manipulate peptides by adding amino acids at every position, 
-    count the occurrences of each amino acid at each position, and transform 
-    amino acid counts based on probabilities. Additionally, the package offers 
-    functionalities to select the best versus the worst peptides and further 
-    analyze these peptides. This includes counting specific residues, reducing 
-    peptide sequences, extracting features through One Hot Encoding (OHE), and 
-    utilizing Quantitative Structure-Activity Relationship (QSAR) properties. 
-    This package is intended for both researchers and bioinformatics enthusiasts 
-    who are working on peptide-based projects, specially for their use with 
-    machine learning.
+Authors@R: person("Josep-Ramon", "Codina", , "jrc356@miami.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-4391-450X"))
+Description: This toolkit is designed for manipulation and analysis of peptides. It provides functionalities to assist researchers in peptide engineering and proteomics. Users can manipulate peptides by adding amino acids at every position, count occurrences of each amino acid at each position, and transform amino acid counts based on probabilities. The package offers functionalities to select the best versus the worst peptides and analyze these peptides, which includes counting specific residues, reducing peptide sequences, extracting features through One Hot Encoding (OHE), and utilizing Quantitative Structure-Activity Relationship (QSAR) properties (Osorio et al, 2015 <doi:10.32614/RJ-2015-001>). This package is intended for both researchers and bioinformatics enthusiasts working on peptide-based projects, especially for their use with machine learning.
 Depends: R (>= 4.3.0)
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-Imports:
+Imports: 
     Peptides,
     stats,
-    dplyr ,
-    stringr ,
+    dplyr,
+    stringr,
     caret
 RoxygenNote: 7.2.3
 URL: https://github.com/jrcodina/peptoolkit

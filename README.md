@@ -42,8 +42,7 @@ A BibTeX entry for LaTeX users is
 
 ```
   @Manual{,
-    title = {peptoolkit: A Toolkit for Using Peptide Sequences in Machine Learning and
-Accelerate Virtual Screening},
+    title = {peptoolkit: A Toolkit for Using Peptide Sequences in Machine Learning and Accelerate Virtual Screening},
     author = {Josep-Ramon Codina},
     year = {2023},
     note = {R package version 0.0.1},
