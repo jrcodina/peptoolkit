@@ -11,7 +11,7 @@ You can install the released version of peptoolkit (0.0.1) from [CRAN](https://C
 install.packages("peptoolkit")
 ```
 
-You can also install the development version (1.0.0) from GitHub with:
+You can also install the development version (0.1.0) from GitHub with:
 
 ```r
 # install.packages("devtools") # Uncomment and run if you don't have the devtools package yet
