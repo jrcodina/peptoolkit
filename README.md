@@ -5,13 +5,13 @@ The `peptoolkit` R package is designed for the manipulation and analysis of pept
 
 ## Installation
 
-You can install the released version of peptoolkit from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of peptoolkit (0.0.1) from [CRAN](https://CRAN.R-project.org) with:
 
 ```r
 install.packages("peptoolkit")
 ```
 
-You can also install the development version from GitHub with:
+You can also install the development version (1.0.0) from GitHub with:
 
 ```r
 # install.packages("devtools") # Uncomment and run if you don't have the devtools package yet
