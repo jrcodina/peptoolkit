@@ -4,14 +4,21 @@
 \alias{extract_features_OHE}
 \title{Extract One-Hot Encoded (OHE) Features from Peptide Sequences}
 \usage{
-extract_features_OHE(df, sequence_col = "Sequence", docking_col = NULL)
+extract_features_OHE(
+  df = NULL,
+  sequence_col = "Sequence",
+  docking_col = NULL,
+  n = NULL
+)
 }
 \arguments{
-\item{df}{A data frame or a vector of peptide sequences.}
+\item{df}{A data frame or a vector of peptide sequences. If 'n' is provided, 'df' will be ignored.}
 
 \item{sequence_col}{A string representing the name of the column containing the peptide sequences.}
 
 \item{docking_col}{A string representing the name of the column containing the docking information.}
+
+\item{n}{An integer representing the length of the peptide library to be generated. If 'n' is provided, 'df' will be ignored.}
 }
 \value{
 A data frame containing one-hot encoded peptide sequences and, if provided, docking information.
@@ -20,6 +27,7 @@ A data frame containing one-hot encoded peptide sequences and, if provided, dock
 This function takes a data frame or a vector of peptide sequences and generates
 a one-hot encoded data frame representing each amino acid in the sequences.
 It can also include additional data (such as docking information), if provided.
+Furthermore, it can generate a peptide library of specified length n.
 }
 \examples{
 # Load required library caret
