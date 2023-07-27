@@ -25,9 +25,9 @@ run_prediction(
 \arguments{
 \item{x}{A dataframe containing the sequences and docking information}
 
-\item{docking_col}{A string or integer indicating the column name or number in dataframe 'x' for docking scores.}
+\item{docking_col}{A string or integer indicating the column name or number in data frame 'x' for docking scores.}
 
-\item{seq_col}{A string or integer indicating the column name or number in dataframe 'x' for sequences.}
+\item{seq_col}{A string or integer indicating the column name or number in data frame 'x' for sequences.}
 
 \item{train_pc}{A numeric value indicating the percentage of the data to be used for training in the LightGBM algorithm.}
 
@@ -39,7 +39,7 @@ run_prediction(
 
 \item{to_pred}{A dataframe or vector of sequences to be predicted. If a vector is provided the features will be extracted. If a data frame es provided it must contain the same features as the training data.}
 
-\item{objective}{A string indicating the objective for LightGBM model ('binary', 'regression_l1', 'regression_l2' are accepted for now. Othe rones are available if the raw lightgbm package is used)}
+\item{objective}{A string indicating the objective for LightGBM model ('binary', 'regression_l1', 'regression_l2' are accepted for now. Other ones are available if the raw lightgbm package is used)}
 
 \item{metric}{A string indicating the evaluation metric for the LightGBM model (eg. 'auc', 'l1', 'l2')}
 

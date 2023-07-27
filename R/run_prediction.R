@@ -5,14 +5,14 @@
 #' The function makes use of LightGBM for model training and prediction.
 #'
 #' @param x A dataframe containing the sequences and docking information
-#' @param docking_col A string or integer indicating the column name or number in dataframe 'x' for docking scores.
-#' @param seq_col A string or integer indicating the column name or number in dataframe 'x' for sequences.
+#' @param docking_col A string or integer indicating the column name or number in data frame 'x' for docking scores.
+#' @param seq_col A string or integer indicating the column name or number in data frame 'x' for sequences.
 #' @param train_pc A numeric value indicating the percentage of the data to be used for training in the LightGBM algorithm.
 #' @param properties A string indicating the type of properties to be used (either 'QSAR' or 'OHE')
 #' @param method A string indicating the prediction method (either 'All' for predicting a full library - all tetramers, all pentamers ... determined by n - or 'Custom' if 'to_pred' is given)
 #' @param n An integer indicating the length of the sequences (tetramers = 4, pentamers = 5, and so on). All sequences must be the same length.
 #' @param to_pred A dataframe or vector of sequences to be predicted. If a vector is provided the features will be extracted. If a data frame es provided it must contain the same features as the training data.
-#' @param objective A string indicating the objective for LightGBM model ('binary', 'regression_l1', 'regression_l2' are accepted for now. Othe rones are available if the raw lightgbm package is used)
+#' @param objective A string indicating the objective for LightGBM model ('binary', 'regression_l1', 'regression_l2' are accepted for now. Other ones are available if the raw lightgbm package is used)
 #' @param metric A string indicating the evaluation metric for the LightGBM model (eg. 'auc', 'l1', 'l2')
 #' @param best_pc A numeric value indicating the percentage of 'best-performers' groups for binary objective.
 #' @param nround An integer indicating the maximum number of iterations for the LightGBM model
