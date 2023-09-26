@@ -4,124 +4,142 @@
 #' from peptide sequences. The extraction is based on a variety of amino acid properties
 #' and functions from the "Peptides" package (https://github.com/dosorio/Peptides/).
 #'
-#' @param n The length of the peptide sequences.Must be more than 2.
+#' @param df A data frame or a vector of peptide sequences. If 'df' is provided, 'n' will be ignored.
+#' @param sequence_col A string representing the name of the column containing the peptide sequences.
+#' @param docking_col A string representing the name of the column containing the docking information.
+#' @param n An integer representing the length of the peptide library to be generated. If 'df' is provided, 'n' will be ignored.
 #' @param pH The pH used for calculating charge (default is 7.4).
-#' @param custom.list A boolean indicating if a custom peptide list is provided (default is FALSE).
-#' @param PeList The custom list of peptides (required if custom.list is TRUE).
-#' @param rem.cys A boolean indicating if sequences with Cys should be removed (default is FALSE).
-#' @param rem.met A boolean indicating if sequences with Met should be removed (default is FALSE).
-#' @param rem.sali A boolean indicating if sequences with 2 or more small aliphatic amino acids should be removed (default is FALSE).
-#' @param norm A boolean indicating if the data should be normalized (default is FALSE).
-#'
+#' @param normalize A boolean indicating if the data should be normalized (default is FALSE).
 #' @return A dataframe with the calculated peptide properties.
 #' @export
+#' @import Peptides
 #'
 #' @examples
-#' extract_features_QSAR(n = 3, custom.list = TRUE, PeList = c('ACA', 'ADE'))
-extract_features_QSAR <- function(n, pH = 7.4, custom.list = FALSE, PeList = NULL, rem.cys = FALSE, rem.met = FALSE, rem.sali = FALSE, norm = FALSE){
+#' extract_features_QSAR(df = c('ACA', 'EDE'))
+extract_features_QSAR <- function(df = NULL, n = NULL, sequence_col = "Sequence", docking_col = NULL, pH = 7.4, normalize = FALSE){
 
-  # Check if custom.list is TRUE then PeList should not be NULL
-  if(custom.list && is.null(PeList)){
-    stop("When custom.list is TRUE, PeList must be provided.")
+  if (!requireNamespace("Peptides", quietly = TRUE)) {
+    stop("Package 'Peptides' is needed for this function to work. Please install it.")
   }
 
-  # Check if n is a positive integer
-  if(!is.numeric(n) || n < 1 || (n %% 1 != 0)){
-    stop("n must be a positive integer.")
-  }
-
-  # Check if n more than 2
-  if(n <= 2){
-    stop("n must be more than 2.")
-  }
-
-  system.time({
-    if (!custom.list){PeList <- expand.grid(rep(list(Peptides::aaList()), n))}
-
-    if (inherits(PeList, "data.frame") && !is.null(ncol(PeList))){
-      PeList <- do.call(paste0, PeList[, 1:n])
-    }
-
-    if (rem.cys){PeList <- PeList[!grepl("C", PeList)]} # Remove sequences with Cys
-
-    if (rem.met){PeList <- PeList[!grepl("M", PeList)]} # Remove sequences with Met
-
-    if (rem.sali) {
-
-      remove <- which(nchar(gsub("[AGILV]", "", PeList)) <= 2)  # Remove sequences with 2 or more small aliphatic amino acids
-
-      if (length(remove) != 0) {
-        PeList <- PeList[-remove]
+  # Check if df is provided and is valid
+  if (!is.null(df)) {
+    if (is.data.frame(df)){
+      if (length(df) >=2 & is.null(docking_col)) {
+        warning(paste0("No 'docking_col' argument provided, but 'df' contains more than 1 column. Assuming '", names(df)[2], "' as 'docking_col'."))
+        docking_col <- names(df)[2]
       }
     }
 
-    # Make sure PeList is not empty after all the modifications
-    if(length(PeList) == 0){
-      stop("After applying all filters, PeList is empty.")
+    if (is.vector(df)) {
+      # Convert vector to data frame.
+      df <- data.frame(Sequence = df)
+    } else if (!is.data.frame(df)) {
+      stop("'df' must be a data frame or a vector.")
+    }
+  } else if (!is.null(n)) {
+    # If df is not provided, check for n
+
+    # Check if n is a positive integer
+    if(!is.numeric(n) || n <= 2 || (n %% 1 != 0)){
+      stop("n must be a positive integer greater than 2.")
     }
 
-    peptides <- cbind(PeList,
-                      as.data.frame(do.call(rbind, Peptides::crucianiProperties(PeList))),
-                      as.data.frame(do.call(rbind, Peptides::fasgaiVectors(PeList))),
-                      as.data.frame(do.call(rbind, Peptides::kideraFactors(PeList))),
-                      as.data.frame(do.call(rbind, Peptides::protFP(PeList))),
-                      as.data.frame(do.call(rbind, Peptides::tScales(PeList))),
-                      as.data.frame(do.call(rbind, Peptides::vhseScales(PeList))),
-                      as.data.frame(do.call(rbind, Peptides::zScales(PeList))))
+    # Generate the peptide library
+    PeList <- expand.grid(rep(list(Peptides::aaList()), n))
+    sequences <- do.call(paste0, PeList)
+    df <- data.frame(Sequence = sequences)
+  } else {
+    stop("Either 'df' or 'n' must be provided.")
+  }
 
-    pI <- cbind(pI_EMBOS = Peptides::pI(PeList, pKscale = "EMBOSS"),
-                pI_Bjellqvist = Peptides::pI(PeList, pKscale = "Bjellqvist"),
-                pI_Lehninger = Peptides::pI(PeList, pKscale = "Lehninger"),
-                pI_Murray = Peptides::pI(PeList, pKscale = "Murray"),
-                pI_Rodwell = Peptides::pI(PeList, pKscale = "Rodwell"),
-                pI_Sillero = Peptides::pI(PeList, pKscale = "Sillero"))
+  # Store column names
+  col_names <- names(df)
 
-    mShft_15n <- Peptides::massShift(PeList, label = "15n", aaShift = NULL, monoisotopic = TRUE)
+  # Check if the sequence column exists
+  if (!(sequence_col %in% col_names)) {
+    stop(paste("Column", sequence_col, "not found in the data frame."))
+  }
 
-    charges <- cbind(Peptides::charge(PeList, pH = pH, pKscale = "EMBOSS"))
+  # Check if the docking column exists if provided
+  if (!is.null(docking_col) && !(docking_col %in% col_names)) {
+    stop(paste("Column", docking_col, "not found in the data frame."))
+  }
 
-    hydrophobicity_indexes <- c("Aboderin", "AbrahamLeo", "BlackMould",
-                                "BullBreese", "Casari", "Chothia", "Cid",
-                                "Cowan3.4", "Cowan7.5", "Eisenberg", "Fasman",
-                                "Fauchere", "Goldsack", "Guy", "HoppWoods",
-                                "interfaceScale_pH2", "interfaceScale_pH8", "Janin",
-                                "Jones", "Juretic", "Kuhn", "KyteDoolittle",
-                                "Levitt", "Manavalan", "Miyazawa", "octanolScale_pH2",
-                                "oiScale_pH2", "oiScale_pH8", "Parker", "Ponnuswamy",
-                                "Prabhakaran", "Rao", "Rose", "Roseman", "Sweet",
-                                "Tanford", "Welling", "Wilson", "Wolfenden",
-                                "Zimmerman")
+  sequences <- toupper(df[[sequence_col]])
 
-    hydrophobicity <- list()
-    for (i in 1:length(hydrophobicity_indexes)) {
-      hydrophobicity[[i]] <- Peptides::hydrophobicity (PeList, scale = hydrophobicity_indexes[i])
-      names(hydrophobicity)[[i]] <- paste0("hb_",hydrophobicity_indexes[i])
-    }
+  peptides <- cbind(df,
+                    as.data.frame(do.call(rbind, Peptides::crucianiProperties(sequences))),
+                    as.data.frame(do.call(rbind, Peptides::fasgaiVectors(sequences))),
+                    as.data.frame(do.call(rbind, Peptides::kideraFactors(sequences))),
+                    as.data.frame(do.call(rbind, Peptides::protFP(sequences))),
+                    as.data.frame(do.call(rbind, Peptides::tScales(sequences))),
+                    as.data.frame(do.call(rbind, Peptides::vhseScales(sequences))),
+                    as.data.frame(do.call(rbind, Peptides::zScales(sequences))))
+
+  pI <- cbind(pI_EMBOS = Peptides::pI(sequences, pKscale = "EMBOSS"),
+              pI_Bjellqvist = Peptides::pI(sequences, pKscale = "Bjellqvist"),
+              pI_Lehninger = Peptides::pI(sequences, pKscale = "Lehninger"),
+              pI_Murray = Peptides::pI(sequences, pKscale = "Murray"),
+              pI_Rodwell = Peptides::pI(sequences, pKscale = "Rodwell"),
+              pI_Sillero = Peptides::pI(sequences, pKscale = "Sillero"))
+
+  mShft_15n <- Peptides::massShift(sequences, label = "15n", aaShift = NULL, monoisotopic = TRUE)
+
+  charges <- cbind(Peptides::charge(sequences, pH = pH, pKscale = "EMBOSS"))
+
+  hydrophobicity_indexes <- c("Aboderin", "AbrahamLeo", "BlackMould",
+                              "BullBreese", "Casari", "Chothia", "Cid",
+                              "Cowan3.4", "Cowan7.5", "Eisenberg", "Fasman",
+                              "Fauchere", "Goldsack", "Guy", "HoppWoods",
+                              "interfaceScale_pH2", "interfaceScale_pH8", "Janin",
+                              "Jones", "Juretic", "Kuhn", "KyteDoolittle",
+                              "Levitt", "Manavalan", "Miyazawa", "octanolScale_pH2",
+                              "oiScale_pH2", "oiScale_pH8", "Parker", "Ponnuswamy",
+                              "Prabhakaran", "Rao", "Rose", "Roseman", "Sweet",
+                              "Tanford", "Welling", "Wilson", "Wolfenden",
+                              "Zimmerman")
+
+  hydrophobicity <- list()
+
+  for (i in 1:length(hydrophobicity_indexes)) {
+
+    hydrophobicity[[i]] <- Peptides::hydrophobicity (sequences, scale = hydrophobicity_indexes[i])
+
+    names(hydrophobicity)[[i]] <- paste0("hb_",hydrophobicity_indexes[i])
+
+  }
 
 
-    peptides <- cbind(peptides, data.frame(aIndex = Peptides::aIndex(PeList),
-                                           Boman = Peptides::boman(PeList),
-                                           chrg_EMBOSS = charges,
-                                           hmoment1 = Peptides::hmoment(PeList, angle = 100, window = 11),
-                                           hmoment2 = Peptides::hmoment(PeList, angle = 160, window = 11),
-                                           hydrophobicity,
-                                           instaIndex = Peptides::instaIndex(PeList),
-                                           mShft_15n,
-                                           mw1 = Peptides::mw(PeList, monoisotopic = TRUE),
-                                           pI))
-    if (norm == T) {
-      X <- peptides[,-1]
-      Sequence <- peptides[,1]
+  peptides <- cbind(peptides, data.frame(aIndex = Peptides::aIndex(sequences),
+                                         Boman = Peptides::boman(sequences),
+                                         chrg_EMBOSS = charges,
+                                         hmoment1 = Peptides::hmoment(sequences, angle = 100, window = 11),
+                                         hmoment2 = Peptides::hmoment(sequences, angle = 160, window = 11),
+                                         hydrophobicity,
+                                         instaIndex = Peptides::instaIndex(sequences),
+                                         mShft_15n,
+                                         mw1 = Peptides::mw(sequences, monoisotopic = TRUE),
+                                         pI))
+  if (normalize) {
+    X <- peptides[,!(names(peptides) %in% c(sequence_col, docking_col))]
 
-      max = apply(X , 2 , max)
-      min = apply(X, 2 , min)
-      Xn = as.data.frame(scale(X, center = min, scale = max - min))
+    max = apply(X , 2 , max)
+    min = apply(X, 2 , min)
+    Xn = as.data.frame(scale(X, center = min, scale = max - min))
 
-      peptides <- cbind(Sequence, Xn)
-    }
+    peptides <- Xn
+  }
 
-    names(peptides)[1] <- "Sequence"
+  # Move the specified sequence column to the start of the data frame
+  QSAR_sequences <- data.frame(Sequence = sequences)
 
-    return(peptides)
-  })
+  if(!is.null(docking_col)) {
+    # Include docking data if it is provided
+    QSAR_sequences[[docking_col]] <- df[[docking_col]]
+  }
+
+  QSAR_sequences <- cbind(QSAR_sequences, peptides[-1])
+
+  return(QSAR_sequences)
 }

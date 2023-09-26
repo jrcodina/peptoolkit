@@ -5,21 +5,17 @@
 #' It can also include additional data (such as docking information), if provided.
 #' Furthermore, it can generate a peptide library of specified length n.
 #'
-#' @param df A data frame or a vector of peptide sequences. If 'n' is provided, 'df' will be ignored.
+#' @param df A data frame or a vector of peptide sequences. If 'df' is provided, 'n' will be ignored.
 #' @param sequence_col A string representing the name of the column containing the peptide sequences.
 #' @param docking_col A string representing the name of the column containing the docking information.
-#' @param n An integer representing the length of the peptide library to be generated. If 'n' is provided, 'df' will be ignored.
+#' @param n An integer representing the length of the peptide library to be generated. If 'df' is provided, 'n' will be ignored.
 #' @return A data frame containing one-hot encoded peptide sequences and, if provided, docking information.
-#' @examples
-#' # Load required library caret
-#' library(caret)
-#' # Generate a mock data frame of peptide sequences
-#' df <- data.frame(Sequence = c("AVILG", "VILGA", "ILGAV", "LGAVI"), X = c(1,1,2,3))
-#' # Apply the function to the mock data
-#' extract_features_OHE(df)
 #' @export
 #' @import caret
-#'
+#' #' @examples
+#' # Load required library caret
+#' library(caret)
+#' extract_features_OHE(df = c('ACA', 'EDE'))
 extract_features_OHE <- function(df = NULL, sequence_col = "Sequence", docking_col = NULL, n = NULL) {
 
   # Load the required library
@@ -30,16 +26,28 @@ extract_features_OHE <- function(df = NULL, sequence_col = "Sequence", docking_c
     stop("Package 'Peptides' is needed for this function to work. Please install it.")
   }
 
-  if (!is.null(n)) {
+  # Check if df is provided and is valid
+  if (!is.null(df)) {
+    if (is.vector(df)) {
+      # Convert vector to data frame.
+      df <- data.frame(Sequence = df)
+    } else if (!is.data.frame(df)) {
+      stop("'df' must be a data frame or a vector.")
+    }
+  } else if (!is.null(n)) {
+    # If df is not provided, check for n
+
+    # Check if n is a positive integer
+    if(!is.numeric(n) || n <= 2 || (n %% 1 != 0)){
+      stop("n must be a positive integer greater than 2.")
+    }
+
     # Generate the peptide library
     PeList <- expand.grid(rep(list(Peptides::aaList()), n))
     sequences <- do.call(paste0, PeList)
     df <- data.frame(Sequence = sequences)
-  } else if(is.vector(df)) {
-    # Convert vector to data frame.
-    df <- data.frame(Sequence = df)
-  } else if (!is.data.frame(df)) {
-    stop("'df' must be a data frame or a vector.")
+  } else {
+    stop("Either 'df' or 'n' must be provided.")
   }
 
   # Store column names
