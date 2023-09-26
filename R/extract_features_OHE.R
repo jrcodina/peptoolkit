@@ -12,7 +12,8 @@
 #' @return A data frame containing one-hot encoded peptide sequences and, if provided, docking information.
 #' @export
 #' @import caret
-#' #' @examples
+#'
+#' @examples
 #' # Load required library caret
 #' library(caret)
 #' extract_features_OHE(df = c('ACA', 'EDE'))

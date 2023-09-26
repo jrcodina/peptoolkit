@@ -5,32 +5,26 @@
 \title{Extract QSAR Features from Peptide Sequences}
 \usage{
 extract_features_QSAR(
-  n,
+  df = NULL,
+  n = NULL,
+  sequence_col = "Sequence",
+  docking_col = NULL,
   pH = 7.4,
-  custom.list = FALSE,
-  PeList = NULL,
-  rem.cys = FALSE,
-  rem.met = FALSE,
-  rem.sali = FALSE,
-  norm = FALSE
+  normalize = FALSE
 )
 }
 \arguments{
-\item{n}{The length of the peptide sequences.Must be more than 2.}
+\item{df}{A data frame or a vector of peptide sequences. If 'df' is provided, 'n' will be ignored.}
+
+\item{n}{An integer representing the length of the peptide library to be generated. If 'df' is provided, 'n' will be ignored.}
+
+\item{sequence_col}{A string representing the name of the column containing the peptide sequences.}
+
+\item{docking_col}{A string representing the name of the column containing the docking information.}
 
 \item{pH}{The pH used for calculating charge (default is 7.4).}
 
-\item{custom.list}{A boolean indicating if a custom peptide list is provided (default is FALSE).}
-
-\item{PeList}{The custom list of peptides (required if custom.list is TRUE).}
-
-\item{rem.cys}{A boolean indicating if sequences with Cys should be removed (default is FALSE).}
-
-\item{rem.met}{A boolean indicating if sequences with Met should be removed (default is FALSE).}
-
-\item{rem.sali}{A boolean indicating if sequences with 2 or more small aliphatic amino acids should be removed (default is FALSE).}
-
-\item{norm}{A boolean indicating if the data should be normalized (default is FALSE).}
+\item{normalize}{A boolean indicating if the data should be normalized (default is FALSE).}
 }
 \value{
 A dataframe with the calculated peptide properties.
@@ -41,5 +35,5 @@ from peptide sequences. The extraction is based on a variety of amino acid prope
 and functions from the "Peptides" package (https://github.com/dosorio/Peptides/).
 }
 \examples{
-extract_features_QSAR(n = 3, custom.list = TRUE, PeList = c('ACA', 'ADE'))
+extract_features_QSAR(df = c('ACA', 'EDE'))
 }

@@ -14,8 +14,7 @@ Imports:
     Peptides,
     stats,
     dplyr,
-    stringr,
-    lightgbm
+    stringr
 RoxygenNote: 7.2.3
 URL: https://github.com/jrcodina/peptoolkit
 BugReports: https://github.com/jrcodina/peptoolkit/issues

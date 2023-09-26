@@ -12,13 +12,13 @@ extract_features_OHE(
 )
 }
 \arguments{
-\item{df}{A data frame or a vector of peptide sequences. If 'n' is provided, 'df' will be ignored.}
+\item{df}{A data frame or a vector of peptide sequences. If 'df' is provided, 'n' will be ignored.}
 
 \item{sequence_col}{A string representing the name of the column containing the peptide sequences.}
 
 \item{docking_col}{A string representing the name of the column containing the docking information.}
 
-\item{n}{An integer representing the length of the peptide library to be generated. If 'n' is provided, 'df' will be ignored.}
+\item{n}{An integer representing the length of the peptide library to be generated. If 'df' is provided, 'n' will be ignored.}
 }
 \value{
 A data frame containing one-hot encoded peptide sequences and, if provided, docking information.
@@ -32,8 +32,5 @@ Furthermore, it can generate a peptide library of specified length n.
 \examples{
 # Load required library caret
 library(caret)
-# Generate a mock data frame of peptide sequences
-df <- data.frame(Sequence = c("AVILG", "VILGA", "ILGAV", "LGAVI"), X = c(1,1,2,3))
-# Apply the function to the mock data
-extract_features_OHE(df)
+extract_features_OHE(df = c('ACA', 'EDE'))
 }
